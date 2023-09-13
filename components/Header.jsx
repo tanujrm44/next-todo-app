@@ -3,27 +3,22 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import { TbDoorEnter } from "react-icons/tb"
 import { signIn, signOut, useSession, getProviders } from "next-auth/react"
+import Image from "next/image"
+import { useSelector } from "react-redux"
 
 
 export default function Header() {
     const { data: session } = useSession()
+    const state = useSelector(state => state.todo)
+    console.log(state)
 
     const [providers, setProviders] = useState(null)
-    //    useEffect(() => {
-    //        if (window.location.pathname === "/sign-in") {
-    //            document.title = "Sign In"
-    //        } else if (window.location.pathname === "/register") {
-    //            document.title = "Register"
-    //        } else {
-    //            document.title = "CRUD App"
-    //        }
-    //    }, [window.location.pathname])
     useEffect(() => {
         (async () => {
-          const res = await getProviders();
-          setProviders(res);
-        })();
-      }, [])
+            const res = await getProviders()
+            setProviders(res)
+        })()
+    }, [])
 
     return (
         <nav className="bg-gray-800">
@@ -40,11 +35,11 @@ export default function Header() {
                         <div className="ml-4 flex items-center md:ml-6">
                             {session?.user ? (
                                 <>
-                                    <Link href='/create-prompt' className='black_btn'>
+                                    <Link href='/create-prompt' className='px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-700'>
                                         Create Post
                                     </Link>
 
-                                    <button type='button' onClick={signOut} className='outline_btn'>
+                                    <button type='button' onClick={signOut} className='px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-700'>
                                         Sign Out
                                     </button>
                                     <Link href='/profile'>
@@ -52,27 +47,27 @@ export default function Header() {
                                             src={session?.user.image}
                                             width={37}
                                             height={37}
-                                            className='rounded-full'
+                                            className='rounded-full ml-2'
                                             alt='profile'
                                         />
                                     </Link>
                                 </>
                             ) : (
                                 <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type='button'
-                  key={provider.name}
-                  onClick={() => {
-                    signIn(provider.id);
-                  }}
-                  className='px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-700'
-                >
-                  Sign in
-                </button>
-              ))}
-          </>
+                                    {providers &&
+                                        Object.values(providers).map((provider) => (
+                                            <button
+                                                type='button'
+                                                key={provider.name}
+                                                onClick={() => {
+                                                    signIn(provider.id)
+                                                }}
+                                                className='px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-700'
+                                            >
+                                                Sign in
+                                            </button>
+                                        ))}
+                                </>
                             )}
                             {/*<Link href={window.location.pathname === "/sign-in" ? "/register" : window.location.pathname === "/register" ? "/sign-in" : ""} className="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-700"><div className="flex items-center space-x-3"><TbDoorEnter />{window.location.pathname === "/sign-in" ? "Register" : window.location.pathname === "/register" ? "Sign In" : ""}</div></Link>*/}
                         </div>

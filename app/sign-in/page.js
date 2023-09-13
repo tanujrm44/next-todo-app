@@ -1,16 +1,30 @@
 "use client"
 
-import { useState } from "react"
-import { Router } from "next/router"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useSession } from "next-auth/react"
+
+
 
 export const meta = {
   title: "Sign In",
 }
 
 export default function SignIn() {
+  const { data: session } = useSession()
+  const Router = useRouter()
+
   const [formData, setFormData] = useState({ email: "", password: "" })
   const [submitting, setSubmitting] = useState(false)
+
+  console.log(session)
+
+  useEffect(() => {
+    if (session?.user) {
+      Router.push("/")
+    }
+  }, [session])
 
   const { email, password } = formData
 
